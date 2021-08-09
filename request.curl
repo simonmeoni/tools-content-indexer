@@ -1,37 +1,68 @@
 GET tools/_search
 {
-  "query": {
-    "match_all": {}
+"query": {
+  "match_all": {}
+}
+}
+
+GET tools/_search
+{
+"_source": "route",
+"query": {
+  "multi_match": {
+    "type": "best_fields",
+    "query": "cancer du poumon",
+    "fields": [
+      "route.url^10",
+      "content.french",
+      "route.french"
+    ]
   }
+}
+}
+
+GET tools/_search
+{
+"_source": "route",
+"query": {
+  "multi_match": {
+    "type": "best_fields",
+    "query": "angine de poitrine",
+    "fields": [
+      "route.url",
+      "content.french",
+      "route.french"
+    ]
+  }
+}
 }
 
 GET tools/_search
 {
   "_source": "route",
   "query": {
-    "multi_match": {
-      "type": "best_fields",
-      "query": "cancer du poumon",
-      "fields": [
-        "route.url^10",
-        "content.french",
-        "route.french"
-      ]
-    }
-  }
-}
-
-GET tools/_search
-{
-  "_source": "route",
-  "query": {
-    "multi_match": {
-      "type": "best_fields",
-      "query": "dermato",
-      "fields": [
-        "route.url",
-        "content.french",
-        "route.french"
+    "bool": {
+      "should": [
+        {
+          "multi_match": {
+            "query": "chrono",
+            "type": "best_fields",
+            "fields": [
+              "route.url^10",
+              "content.french",
+              "route.french"
+            ]
+          }
+        },
+        {
+          "multi_match": {
+            "query": "chrono",
+            "type": "phrase_prefix",
+            "fields": [
+              "route.url^10"
+            ]
+          }
+        }
       ]
     }
   }
